@@ -1,5 +1,8 @@
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
+
 function App() {
-  return <div className="text-red-900 text-3xl">Expense Tracker</div>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;
