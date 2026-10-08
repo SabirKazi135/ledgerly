@@ -139,6 +139,7 @@ function IncomePage() {
       category: data.title,
       amount: Number(data.amount),
       date: data.date,
+      icon: data.icon,
     };
 
     setIncomes((previous) => [newIncome, ...previous]);

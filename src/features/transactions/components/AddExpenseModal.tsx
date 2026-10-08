@@ -1,9 +1,15 @@
 import { useState } from "react";
+import type { ExpenseIconName } from "../../../types/expense";
+import {
+  EXPENSE_ICON_OPTIONS,
+  ExpenseIcon,
+} from "./ExpenseIcons";
 
 export type ExpenseFormData = {
   title: string;
   amount: string;
   date: string;
+  icon: ExpenseIconName;
 };
 
 type AddExpenseModalProps = {
@@ -17,7 +23,9 @@ function AddExpenseModal({ isOpen, onClose, onSubmit }: AddExpenseModalProps) {
     title: "",
     amount: "",
     date: new Date().toISOString().split("T")[0],
+    icon: "other",
   });
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
 
   if (!isOpen) {
     return null;
@@ -30,6 +38,17 @@ function AddExpenseModal({ isOpen, onClose, onSubmit }: AddExpenseModalProps) {
       ...previous,
       [name]: value,
     }));
+  };
+
+  const handleClose = () => {
+    setFormData({
+      title: "",
+      amount: "",
+      date: new Date().toISOString().split("T")[0],
+      icon: "other",
+    });
+    setIsIconPickerOpen(false);
+    onClose();
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +65,9 @@ function AddExpenseModal({ isOpen, onClose, onSubmit }: AddExpenseModalProps) {
       title: "",
       amount: "",
       date: new Date().toISOString().split("T")[0],
+      icon: "other",
     });
+    setIsIconPickerOpen(false);
   };
 
   return (
@@ -59,7 +80,7 @@ function AddExpenseModal({ isOpen, onClose, onSubmit }: AddExpenseModalProps) {
 
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleClose}
               aria-label="Close modal"
               className="inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
             >
@@ -85,29 +106,50 @@ function AddExpenseModal({ isOpen, onClose, onSubmit }: AddExpenseModalProps) {
           <div className="space-y-4 p-4 md:p-5">
             <form onSubmit={handleSubmit}>
               {/* Icon Picker */}
-              <div className="mb-6 flex flex-col items-start gap-5 md:flex-row">
-                <div className="flex cursor-pointer items-center gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-2xl text-[#16a24a]">
-                    <svg
-                      stroke="currentColor"
-                      fill="none"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      height="1em"
-                      width="1em"
-                    >
-                      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+              <div className="mb-6">
+                <button
+                  type="button"
+                  onClick={() => setIsIconPickerOpen((open) => !open)}
+                  aria-expanded={isIconPickerOpen}
+                  className="flex items-center gap-4 rounded-lg text-left hover:opacity-80"
+                >
+                  <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-[#16a24a]">
+                    <ExpenseIcon name={formData.icon} className="h-5 w-5" />
+                  </span>
+                  <span>
+                    <span className="block text-sm font-medium">Pick Icon</span>
+                    <span className="block text-xs capitalize text-gray-500">
+                      {formData.icon}
+                    </span>
+                  </span>
+                </button>
 
-                      <circle cx="9" cy="9" r="2" />
-
-                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                    </svg>
+                {isIconPickerOpen && (
+                  <div className="mt-3 grid grid-cols-2 gap-2 rounded-lg border border-gray-200 p-3 sm:grid-cols-3">
+                    {EXPENSE_ICON_OPTIONS.map((option) => (
+                      <button
+                        key={option.name}
+                        type="button"
+                        onClick={() => {
+                          setFormData((previous) => ({
+                            ...previous,
+                            icon: option.name,
+                          }));
+                          setIsIconPickerOpen(false);
+                        }}
+                        aria-pressed={formData.icon === option.name}
+                        className={`flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition ${
+                          formData.icon === option.name
+                            ? "border-[#16a24a] bg-green-50 text-[#16833f]"
+                            : "border-gray-200 hover:bg-gray-50"
+                        }`}
+                      >
+                        <ExpenseIcon name={option.name} className="h-4 w-4" />
+                        {option.label}
+                      </button>
+                    ))}
                   </div>
-
-                  <p>Pick Icon</p>
-                </div>
+                )}
               </div>
 
               {/* Category */}

@@ -182,6 +182,7 @@ function ExpensePage() {
       category: formData.title,
       amount: Number(formData.amount),
       date: formData.date,
+      icon: formData.icon,
     };
 
     setExpenses((previousExpenses) => [newExpense, ...previousExpenses]);

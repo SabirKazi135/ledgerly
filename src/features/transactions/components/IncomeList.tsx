@@ -1,4 +1,6 @@
 import type { IncomeTransaction } from "../../../types/income";
+import { downloadCsv } from "../../../utils/downloadCsv";
+import { IncomeIcon } from "./IncomeIcons";
 
 type IncomeListProps = {
   incomes: IncomeTransaction[];
@@ -28,25 +30,6 @@ function formatDate(dateString: string) {
           : "th";
 
   return `${day}${suffix} ${month} ${year}`;
-}
-
-function TransactionIcon() {
-  return (
-    <svg
-      stroke="currentColor"
-      fill="none"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      height="1em"
-      width="1em"
-    >
-      <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
-      <path d="M7 2v20" />
-      <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
-    </svg>
-  );
 }
 
 function DeleteIcon() {
@@ -126,6 +109,19 @@ function DownloadIcon() {
 }
 
 function IncomeList({ incomes, onDelete }: IncomeListProps) {
+  function handleDownload() {
+    downloadCsv(
+      "income.csv",
+      ["Date", "Title", "Category", "Amount"],
+      incomes.map((income) => [
+        income.date,
+        income.title,
+        income.category,
+        income.amount,
+      ]),
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-gray-200/50 bg-white p-6 shadow-md shadow-gray-100">
       <div className="flex items-center justify-between">
@@ -133,6 +129,7 @@ function IncomeList({ incomes, onDelete }: IncomeListProps) {
 
         <button
           type="button"
+          onClick={handleDownload}
           className="flex items-center gap-1 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
         >
           <DownloadIcon />
@@ -147,7 +144,7 @@ function IncomeList({ incomes, onDelete }: IncomeListProps) {
             className="group relative mt-2 flex items-center gap-4 rounded-lg p-3 hover:bg-gray-100/60"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xl text-gray-800">
-              <TransactionIcon />
+              <IncomeIcon name={income.icon ?? "other"} className="h-5 w-5" />
             </div>
 
             <div className="flex flex-1 items-center justify-between">
