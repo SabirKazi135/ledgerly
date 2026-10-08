@@ -8,7 +8,7 @@ import {
   createTransaction,
   deleteTransaction,
   getTransactions,
-  updateTransaction as updateTransactionRequest,
+  updateTransaction,
 } from "./transactionApi";
 import {
   validateTransaction,
@@ -20,18 +20,18 @@ interface TransactionStore {
   isLoading: boolean;
   error: string | null;
   loadTransactions: () => Promise<void>;
+  addTransaction: (
+    input: CreateTransactionInput,
+  ) => Promise<TransactionValidationErrors | null>;
   updateTransaction: (
     id: string,
     updates: UpdateTransactionInput,
   ) => Promise<TransactionValidationErrors | null>;
-  addTransaction: (
-    input: CreateTransactionInput,
-  ) => Promise<TransactionValidationErrors | null>;
-  deleteTransaction: (id: string) => Promise<boolean>;
+  deleteTransaction: (id: string) => Promise<void>;
   clearTransactions: () => void;
 }
 
-export const useTransactionStore = create<TransactionStore>((set, get) => ({
+export const useTransactionStore = create<TransactionStore>((set) => ({
   transactions: [],
   isLoading: false,
   error: null,
@@ -48,9 +48,10 @@ export const useTransactionStore = create<TransactionStore>((set, get) => ({
       set({ transactions: response.data });
     } catch (requestError) {
       set({
-        error: requestError instanceof Error
-          ? requestError.message
-          : "Unable to load transactions.",
+        error:
+          requestError instanceof Error
+            ? requestError.message
+            : "Unable to load transactions.",
       });
     } finally {
       set({ isLoading: false });
@@ -79,14 +80,15 @@ export const useTransactionStore = create<TransactionStore>((set, get) => ({
   },
 
   updateTransaction: async (id, updates) => {
-    const existing = get().transactions.find((transaction) => transaction.id === id);
-    if (!existing) return { title: "Transaction not found." };
-
-    const errors = validateTransaction({ ...existing, ...updates });
-    if (Object.keys(errors).length > 0) return errors;
-
     try {
-      const transaction = await updateTransactionRequest(id, updates);
+      const current = await getTransactions({ page: 1, limit: 100 });
+      const existing = current.data.find((transaction) => transaction.id === id);
+      if (!existing) return { title: "Transaction not found." };
+
+      const errors = validateTransaction({ ...existing, ...updates });
+      if (Object.keys(errors).length > 0) return errors;
+
+      const transaction = await updateTransaction(id, updates);
       set((state) => ({
         transactions: state.transactions.map((item) =>
           item.id === id ? transaction : item,
@@ -107,10 +109,8 @@ export const useTransactionStore = create<TransactionStore>((set, get) => ({
         transactions: state.transactions.filter((transaction) => transaction.id !== id),
         error: null,
       }));
-      return true;
     } catch (requestError) {
       set({ error: requestError instanceof Error ? requestError.message : "Unable to delete transaction." });
-      return false;
     }
   },
 

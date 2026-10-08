@@ -23,7 +23,7 @@ function readSession(): User | null {
       return { email: user.email, fullName: user.fullName };
     }
   } catch {
-    // Ignore invalid or unavailable browser storage and start signed out.
+    // Ignore invalid browser storage.
   }
 
   return null;
@@ -92,12 +92,10 @@ async function signup(input: SignupInput): Promise<AuthResponse> {
 async function logout(): Promise<void> {
   try {
     await logoutUser();
-  } catch {
-    // Clear the local session even when the server cannot be reached.
+  } finally {
+    setSession(null);
+    error = null;
   }
-
-  error = null;
-  setSession(null);
 }
 
 export type AuthState = {

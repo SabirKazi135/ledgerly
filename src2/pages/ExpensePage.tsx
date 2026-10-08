@@ -80,8 +80,7 @@ function ExpensePage() {
 
   async function handleDelete(id: string) {
     if (window.confirm("Are you sure you want to delete this expense?")) {
-      const deleted = await deleteTransaction(id);
-      if (!deleted) alert("Unable to delete expense. Please try again.");
+      await deleteTransaction(id);
     }
   }
 

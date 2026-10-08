@@ -1,23 +1,23 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { useTransactionStore } from "../../features/transactions/transactionStore";
+import { useLocation } from "react-router-dom";
 import Topbar from "./Topbar";
 import Sidebar from "./Sidebar";
 
 function AppLayout() {
   const location = useLocation();
-  const loadTransactions = useTransactionStore((state) => state.loadTransactions);
-
-  useEffect(() => {
-    void loadTransactions();
-  }, [loadTransactions]);
 
   return <AppLayoutContent key={location.pathname} />;
 }
 
 function AppLayoutContent() {
   const [open, setOpen] = useState(false);
+  const loadTransactions = useTransactionStore((state) => state.loadTransactions);
+
+  useEffect(() => {
+    void loadTransactions();
+  }, [loadTransactions]);
 
   return (
     <div className="min-h-screen">

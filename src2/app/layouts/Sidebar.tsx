@@ -23,12 +23,9 @@ function Sidebar({ open }: SidebarProps) {
   const navigate = useNavigate();
   const logout = useAuthStore((state) => state.logout);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-    } finally {
-      navigate("/login", { replace: true });
-    }
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
   };
 
   const user = useAuthStore((state) => state.user);

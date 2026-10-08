@@ -83,8 +83,7 @@ function IncomePage() {
     if (!income) return;
 
     if (window.confirm(`Are you sure you want to delete "${income.title}"?`)) {
-      const deleted = await deleteTransaction(id);
-      if (!deleted) alert("Unable to delete income. Please try again.");
+      await deleteTransaction(id);
     }
   }
 

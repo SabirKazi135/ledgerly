@@ -45,22 +45,13 @@ function LoginForm() {
   }
 
   async function handleDemoLogin() {
-    setError("");
     setEmail("demo@finance.com");
     setPassword("1234");
-    setIsSubmitting(true);
 
-    const result = await login({
+    await login({
       email: "demo@finance.com",
       password: "1234",
     });
-
-    setIsSubmitting(false);
-
-    if (!result.success) {
-      setError(result.message || "Unable to login. Please try again.");
-      return;
-    }
 
     navigate("/dashboard", { replace: true });
   }
@@ -136,7 +127,6 @@ function LoginForm() {
         <button
           type="button"
           onClick={handleDemoLogin}
-          disabled={isSubmitting}
           className="w-full rounded-[6px] border border-[#00C951] bg-white py-3 font-semibold text-[#00C951] transition hover:bg-[#00C951] hover:text-white"
         >
           Continue with Demo
