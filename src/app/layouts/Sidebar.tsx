@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../features/auth/authStore";
 
 type SidebarProps = {
   open: boolean;
@@ -20,13 +21,15 @@ type SidebarContentProps = {
 
 function Sidebar({ open }: SidebarProps) {
   const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout);
 
   const handleLogout = () => {
+    logout();
     navigate("/login", { replace: true });
   };
 
-  // No auth store yet — keep the same visual profile as the old project.
-  const fullName = "Guest User";
+  const user = useAuthStore((state) => state.user);
+  const fullName = user?.fullName || "Guest User";
 
   const getInitials = (name: string) => {
     if (!name) return "G";
