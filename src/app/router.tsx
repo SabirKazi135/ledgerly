@@ -5,7 +5,7 @@ import AppLayout from "./layouts/AppLayout";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 import DashboardPage from "../pages/DashboardPage";
-import TransactionsPage from "../pages/TransactionsPage";
+import ExpensePage from "../pages/ExpensePage";
 import IncomePage from "../pages/IncomePage";
 
 const router = createBrowserRouter([
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
         element: <DashboardPage />,
       },
       {
-        path: "/transactions",
-        element: <TransactionsPage />,
+        path: "/expense",
+        element: <ExpensePage />,
       },
       {
         path: "/income",
