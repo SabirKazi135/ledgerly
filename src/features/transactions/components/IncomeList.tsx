@@ -1,9 +1,11 @@
-import type { IncomeTransaction } from "../../../types/income";
+import type { Transaction } from "../../../types/transaction";
 import { downloadCsv } from "../../../utils/downloadCsv";
 import { IncomeIcon } from "./IncomeIcons";
+import type { IncomeIconName } from "../../../types/income";
+import { INCOME_ICON_NAMES } from "../../../types/income";
 
 type IncomeListProps = {
-  incomes: IncomeTransaction[];
+  incomes: Transaction[];
   onDelete: (id: string) => void;
 };
 
@@ -30,6 +32,12 @@ function formatDate(dateString: string) {
           : "th";
 
   return `${day}${suffix} ${month} ${year}`;
+}
+
+function getIncomeIconName(icon?: string): IncomeIconName {
+  return INCOME_ICON_NAMES.includes(icon as IncomeIconName)
+    ? (icon as IncomeIconName)
+    : "other";
 }
 
 function DeleteIcon() {
@@ -144,7 +152,7 @@ function IncomeList({ incomes, onDelete }: IncomeListProps) {
             className="group relative mt-2 flex items-center gap-4 rounded-lg p-3 hover:bg-gray-100/60"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xl text-gray-800">
-              <IncomeIcon name={income.icon ?? "other"} className="h-5 w-5" />
+              <IncomeIcon name={getIncomeIconName(income.icon)} className="h-5 w-5" />
             </div>
 
             <div className="flex flex-1 items-center justify-between">

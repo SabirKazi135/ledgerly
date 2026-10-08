@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { IncomeIconName } from "../../../types/income";
-import { INCOME_ICON_OPTIONS, IncomeIcon } from "./IncomeIcons";
+import { IncomeIcon } from "./IncomeIcons";
+import { INCOME_ICON_OPTIONS } from "../incomeIconOptions";
 
 export type IncomeFormData = {
   title: string;

@@ -1,18 +1,21 @@
-export type AuthUser = {
+export interface User {
   fullName: string;
   email: string;
-};
+}
 
-export type LoginCredentials = {
+export interface SignupInput {
+  fullName: string;
   email: string;
   password: string;
-};
+}
 
-export type SignupDetails = LoginCredentials & {
-  fullName: string;
-};
+export interface LoginInput {
+  email: string;
+  password: string;
+}
 
-export type AuthResult = {
+export interface AuthResponse {
   success: boolean;
   message?: string;
-};
+  demo?: boolean;
+}

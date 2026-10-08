@@ -1,9 +1,11 @@
-import type { ExpenseTransaction } from "../../../types/expense";
+import type { Transaction } from "../../../types/transaction";
 import { ExpenseIcon } from "./ExpenseIcons";
+import type { ExpenseIconName } from "../../../types/expense";
+import { EXPENSE_ICON_NAMES } from "../../../types/expense";
 import { downloadCsv } from "../../../utils/downloadCsv";
 
 type ExpenseListProps = {
-  expenses: ExpenseTransaction[];
+  expenses: Transaction[];
   onDelete: (id: string) => void;
 };
 
@@ -34,6 +36,12 @@ function formatDate(dateString: string) {
           : "th";
 
   return `${day}${suffix} ${month} ${year}`;
+}
+
+function getExpenseIconName(icon?: string): ExpenseIconName {
+  return EXPENSE_ICON_NAMES.includes(icon as ExpenseIconName)
+    ? (icon as ExpenseIconName)
+    : "other";
 }
 
 function DeleteIcon() {
@@ -131,7 +139,7 @@ function ExpenseList({ expenses, onDelete }: ExpenseListProps) {
             className="group relative mt-2 flex items-center gap-4 rounded-lg p-3 hover:bg-gray-100/60"
           >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-xl text-gray-800">
-              <ExpenseIcon name={expense.icon ?? "other"} className="h-5 w-5" />
+              <ExpenseIcon name={getExpenseIconName(expense.icon)} className="h-5 w-5" />
             </div>
 
             <div className="flex flex-1 items-center justify-between">

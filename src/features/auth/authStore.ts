@@ -1,15 +1,10 @@
 import { useSyncExternalStore } from "react";
-import type {
-  AuthResult,
-  AuthUser,
-  LoginCredentials,
-  SignupDetails,
-} from "../../types/auth";
+import type { AuthResponse, LoginInput, SignupInput, User } from "../../types/auth";
 
 const SESSION_KEY = "ledgerly.auth.session";
 const listeners = new Set<() => void>();
 
-function readSession(): AuthUser | null {
+function readSession(): User | null {
   try {
     const storedSession = localStorage.getItem(SESSION_KEY);
     if (!storedSession) return null;
@@ -38,7 +33,7 @@ function notifyListeners() {
 
 let currentUser = readSession();
 
-function setUser(user: AuthUser | null) {
+function setUser(user: User | null) {
   currentUser = user;
 
   try {
@@ -69,7 +64,7 @@ function getNameFromEmail(email: string) {
     .join(" ");
 }
 
-function login({ email, password }: LoginCredentials): AuthResult {
+function login({ email, password }: LoginInput): AuthResponse {
   const normalizedEmail = email.trim().toLowerCase();
 
   if (!isValidEmail(normalizedEmail)) {
@@ -84,7 +79,7 @@ function login({ email, password }: LoginCredentials): AuthResult {
   return { success: true };
 }
 
-function signup({ fullName, email, password }: SignupDetails): AuthResult {
+function signup({ fullName, email, password }: SignupInput): AuthResponse {
   const normalizedEmail = email.trim().toLowerCase();
   const normalizedName = fullName.trim();
 
@@ -111,7 +106,7 @@ function logout() {
 const actions = { login, signup, logout };
 
 export type AuthState = {
-  user: AuthUser | null;
+  user: User | null;
   isAuthenticated: boolean;
 } & typeof actions;
 

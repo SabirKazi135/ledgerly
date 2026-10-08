@@ -1,9 +1,7 @@
 import { useState } from "react";
 import type { ExpenseIconName } from "../../../types/expense";
-import {
-  EXPENSE_ICON_OPTIONS,
-  ExpenseIcon,
-} from "./ExpenseIcons";
+import { ExpenseIcon } from "./ExpenseIcons";
+import { EXPENSE_ICON_OPTIONS } from "../expenseIconOptions";
 
 export type ExpenseFormData = {
   title: string;
